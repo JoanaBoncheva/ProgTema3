@@ -404,11 +404,17 @@ data <- read_csv("https://covid.ourworldindata.org/data/owid-covid-data.csv")
 paises <- c("Spain", "United States", "Italy", "Japan", "France", "Germany", "United Kingdom", "Japan", "Canada")
 datos_filtrados <- data %>%
   filter(location %in% paises)
-datos_filtrados
+head(datos_filtrados)
 
 data1<-ggplot(datos_filtrados, aes(x = date, y = new_deaths_per_million, color = location)) +
   geom_line(size = 0.1)+labs(title='Gráfico de nuevas muertes en millones', x= 'Años', y = 'nuevas muertes en millones')+geom_line(data = filter(datos_filtrados, location == "Spain"), size = 0.2, col = "black")
 data1
 
+data2<-ggplot(datos_filtrados, aes(x = date, y = new_deaths_per_million, color = location)) +
+  geom_line(size = 0.1)+labs(title='Gráfico de nuevas muertes en millones', x= 'Años', y = 'nuevas muertes en millones')+geom_line(data = filter(datos_filtrados, location == "Spain"), size = 0.2, col = "black") + scale_x_date(limits=as.Date(c("2021-02-28","2022-02-28")))
+data2
+
+
 ggplotly(data1)
+
 ```
