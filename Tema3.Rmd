@@ -360,3 +360,55 @@ data(Salaries, package="carData")
         ggplotly(q)
         
 ```
+
+## Ejemplo 22. Interactive graph
+
+```{r}
+library(plotly)
+data(Salaries, package="carData")
+        library(ggplot2)
+        mytheme <- theme(plot.title=element_text(face="bold.italic",
+                         size="14", color="brown"),
+                         axis.title=element_text(face="bold.italic",
+                            size=10, color="brown"),
+                         axis.text=element_text(face="bold", size=9,
+                            color="darkblue"),
+                         panel.background=element_rect(fill="white",
+                            color="darkblue"),
+                         panel.grid.major.y=element_line(color="grey",
+                            linetype=1),
+                         panel.grid.minor.y=element_line(color="grey",
+                            linetype=2),
+                         panel.grid.minor.x=element_blank(),
+                         legend.position="top")
+        p<-ggplot(Salaries, aes(x=rank, y=salary, fill=sex)) +
+               geom_boxplot() +
+               labs(title="Salary by Rank and Sex", x="Rank", y="Salary") +
+               mytheme
+        
+        ggplotly(p)
+        
+        
+        q<-ggplot(mtcars, aes(x=wt, y=mpg, size=disp)) +
+               geom_point(shape=21, color="black", fill="cornsilk") +
+                labs(x="Weight", y="Miles Per Gallon",
+                     title="Bubble Chart", size="Engine\nDisplacement")
+        ggplotly(q)
+        
+```
+
+```{r}
+library(readr)
+data <- read_csv("https://covid.ourworldindata.org/data/owid-covid-data.csv")
+# Seleccionar países
+paises <- c("Spain", "United States", "Italy", "Japan", "France", "Germany", "United Kingdom", "Japan", "Canada")
+datos_filtrados <- data %>%
+  filter(location %in% paises)
+datos_filtrados
+
+data1<-ggplot(datos_filtrados, aes(x = date, y = new_deaths_per_million, color = location)) +
+  geom_line(size = 0.1)+labs(title='Gráfico de nuevas muertes en millones', x= 'Años', y = 'nuevas muertes en millones')+geom_line(data = filter(datos_filtrados, location == "Spain"), size = 0.2, col = "black")
+data1
+
+ggplotly(data1)
+```
