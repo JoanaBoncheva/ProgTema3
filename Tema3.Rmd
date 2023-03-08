@@ -398,23 +398,31 @@ data(Salaries, package="carData")
 ```
 
 ```{r}
+#Cargar los datos
 library(readr)
 data <- read_csv("https://covid.ourworldindata.org/data/owid-covid-data.csv")
-# Seleccionar países
+data <- data[!is.na(data$new_deaths_smoothed_per_million), ]
+library(dplyr)
+library(ggplot2)
+
+#seleccionar los países
 paises <- c("Spain", "United States", "Italy", "Japan", "France", "Germany", "United Kingdom", "Japan", "Canada")
+
+#filtrar los datos
 datos_filtrados <- data %>%
   filter(location %in% paises)
-head(datos_filtrados)
+datos_filtrados
 
-data1<-ggplot(datos_filtrados, aes(x = date, y = new_deaths_smoothed_per_million, color = location)) +
-  geom_line(size = 0.1)+labs(title='Gráfico de nuevas muertes en millones', x= 'Años', y = 'nuevas muertes en millones')+geom_line(data = filter(datos_filtrados, location == "Spain"), size = 0.2, col = "black")
+#construir el gráfico
+data1 <- ggplot(datos_filtrados, aes(x = date, y = new_deaths_smoothed_per_million, color = location)) +
+              geom_line(size = 0.1) +
+              labs(title ='Gráfico de nuevas muertes en millones', x = 'Años', y = 'Nuevas muertes en millones') +
+              geom_line(data = filter(datos_filtrados, location == "Spain"), size = 0.3, col = "black") + 
+              theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+              theme_classic()
 data1
 
-data2<-ggplot(datos_filtrados, aes(x = date, y = new_deaths_smoothed_per_million, color = location)) +
-  geom_line(size = 0.1)+labs(title='Gráfico de nuevas muertes en millones', x= 'Años', y = 'nuevas muertes en millones') + geom_line(data = filter(datos_filtrados, location == "Spain"), size = 0.2, col = "black") + scale_x_date(limits=as.Date(c("2021-02-28","2022-02-28")))
-data2
-
-
+#mostrar el gráfico interactivo
 ggplotly(data1)
 
 ```
