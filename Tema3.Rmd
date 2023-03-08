@@ -405,7 +405,7 @@ library(ggplot2)
 library(plotly)
 
 #Cargar los datos del URL
-#data <- read_csv("https://covid.ourworldindata.org/data/owid-covid-data.csv")
+data <- read_csv("https://covid.ourworldindata.org/data/owid-covid-data.csv")
 
 #Eliminar los NA
 data <- data[!is.na(data$new_deaths_smoothed_per_million), ]
@@ -433,5 +433,10 @@ data1 <- ggplot(datos_filtrados, aes(x = date, y = new_deaths_smoothed_per_milli
 data1
 
 #Representar el gráfico interactivo
-ggplotly(data1)
+ggplotly(data1) %>%
+  layout(title = list(text = paste0('Gráfico de nuevas muertes en millones', #para que el subtítulo aparezca en el gráfico interactivo 
+                                    '<br>',                                     #se ha buscado e implementado esta función
+                                    '<sup>',
+                                    'Debido a la variación de los protocolos y a las dificultades en la atribución de la causa de la muerte,\n el número de muertes confirmadas puede no representar con exactitud el verdadero número de muertes causadas por COVID-19',
+                                    '</sup>')))
 ```
