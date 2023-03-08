@@ -398,31 +398,40 @@ data(Salaries, package="carData")
 ```
 
 ```{r}
-#Cargar los datos
+#Cargar las librerías necesarias
 library(readr)
-data <- read_csv("https://covid.ourworldindata.org/data/owid-covid-data.csv")
-data <- data[!is.na(data$new_deaths_smoothed_per_million), ]
 library(dplyr)
 library(ggplot2)
+library(plotly)
 
-#seleccionar los países
+#Cargar los datos del URL
+#data <- read_csv("https://covid.ourworldindata.org/data/owid-covid-data.csv")
+
+#Eliminar los NA
+data <- data[!is.na(data$new_deaths_smoothed_per_million), ]
+
+#Seleccionar los países
 paises <- c("Spain", "United States", "Italy", "Japan", "France", "Germany", "United Kingdom", "Japan", "Canada")
 
-#filtrar los datos
+#Filtrar los datos
 datos_filtrados <- data %>%
   filter(location %in% paises)
 datos_filtrados
 
-#construir el gráfico
+#Construcción del gráfico
 data1 <- ggplot(datos_filtrados, aes(x = date, y = new_deaths_smoothed_per_million, color = location)) +
               geom_line(size = 0.1) +
-              labs(title ='Gráfico de nuevas muertes en millones', x = 'Años', y = 'Nuevas muertes en millones') +
+              labs(title ='Gráfico de nuevas muertes en millones',
+                   subtitle = "Debido a la variación de los protocolos y a las dificultades en la atribución de la causa de la muerte,\n el número de muertes confirmadas puede no representar con exactitud el verdadero número de muertes causadas por COVID-19",
+                   x = 'Años', y = 'Nuevas muertes en millones', 
+                   caption = "Fuente: Our Worl in Data (Johns Hopkins University CSSE COVID-19 Data)") +
               geom_line(data = filter(datos_filtrados, location == "Spain"), size = 0.3, col = "black") + 
+              expand_limits(y = 0) +
               theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
-              theme_classic()
+              theme_classic() +
+              theme(panel.grid.major.y = element_line(color = "gray",size = 0.1,linetype = 2))
 data1
 
-#mostrar el gráfico interactivo
+#Representar el gráfico interactivo
 ggplotly(data1)
-
 ```
